@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form with Real-time Validation and Feedback</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+        .form-control {
+            padding: 8px;
+            font-size: 16px;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        .form-control.valid {
+            border-color: green;
+        }
+        .form-control.invalid {
+            border-color: red;
+        }
+        .feedback {
+            font-size: 14px;
+            color: red;
+            margin-top: 5px;
+            display: none;
+        }
+        .feedback.valid {
+            color: green;
+            display: block;
+        }
+        .feedback.invalid {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <form id="validationForm">
+        <div class="form-group">
+            <label for="name">Name:</label>
+            <input type="text" id="name" class="form-control" placeholder="Enter your name" required>
+            <div id="nameFeedback" class="feedback">Name must be at least 3 characters long.</div>
+        </div>
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" class="form-control" placeholder="Enter your email" required>
+            <div id="emailFeedback" class="feedback">Please enter a valid email address.</div>
+        </div>
+        <div class="form-group">
+            <label for="password">Password:</label>
+            <input type="password" id="password" class="form-control" placeholder="Enter your password" required>
+            <div id="passwordFeedback" class="feedback">Password must be at least 6 characters long.</div>
+        </div>
+        <button type="submit">Submit</button>
+    </form>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const nameInput = document.getElementById('name');
+            const emailInput = document.getElementById('email');
+            const passwordInput = document.getElementById('password');
+
+            function validateInput(input, condition, feedbackElement, successMessage, errorMessage) {
+                if (condition) {
+                    input.classList.add('valid');
+                    input.classList.remove('invalid');
+                    feedbackElement.textContent = successMessage;
+                    feedbackElement.classList.remove('invalid');
+                    feedbackElement.classList.add('valid');
+                } else {
+                    input.classList.add('invalid');
+                    input.classList.remove('valid');
+                    feedbackElement.textContent = errorMessage;
+                    feedbackElement.classList.remove('valid');
+                    feedbackElement.classList.add('invalid');
+                }
+            }
+
+            nameInput.addEventListener('input', () => {
+                const feedback = document.getElementById('nameFeedback');
+                validateInput(
+                    nameInput,
+                    nameInput.value.trim().length >= 3,
+                    feedback,
+                    'Looks good!',
+                    'Name must be at least 3 characters long.'
+                );
+            });
+
+            emailInput.addEventListener('input', () => {
+                const feedback = document.getElementById('emailFeedback');
+                const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                validateInput(
+                    emailInput,
+                    emailPattern.test(emailInput.value.trim()),
+                    feedback,
+                    'Valid email!',
+                    'Please enter a valid email address.'
+                );
+            });
+
+            passwordInput.addEventListener('input', () => {
+                const feedback = document.getElementById('passwordFeedback');
+                validateInput(
+                    passwordInput,
+                    passwordInput.value.trim().length >= 6,
+                    feedback,
+                    'Strong password!',
+                    'Password must be at least 6 characters long.'
+                );
+            });
+        });
+    </script>
+</body>
+</html>
